@@ -51,6 +51,10 @@ dependencies {
     implementation("androidx.compose.ui:ui:1.6.8")
     implementation("androidx.compose.material:material:1.6.8")
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.8")
+    // drawer and navigation
+    implementation("androidx.drawerlayout:drawerlayout:1.1.1")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
+    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

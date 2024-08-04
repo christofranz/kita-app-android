@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_first_layout"
+            android:icon="@drawable/home"
+            android:title="First Layout" />
+        <item
+            android:id="@+id/nav_second_layout"
+            android:icon="@drawable/contact_mail"
+            android:title="Second Layout" />
+        <item
+            android:id="@+id/nav_third_layout"
+            android:icon="@drawable/baseline_comment_24"
+            android:title="Third Layout" />
+    </group>
+    <item android:title="Other">
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/baseline_logout_24"
+                android:title="Logout" />
+        </menu>
+    </item>
+</menu>
