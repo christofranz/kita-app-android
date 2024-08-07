@@ -33,21 +33,24 @@ class LoginActivity : AppCompatActivity() {
     private fun loginUser(username: String, password: String) {
         val user = User(username, password)
 
-        RetrofitClient.instance.login(user).enqueue(object : Callback<ResponseMessage> {
-            override fun onResponse(call: Call<ResponseMessage>, response: Response<ResponseMessage>) {
+        RetrofitClient.instance.login(user).enqueue(object : Callback<LoginResponse> {
+            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful) {
                     val message = response.body()?.message
+                    val role = response.body()?.role
                     Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this@LoginActivity, WelcomeActivity::class.java).apply {
-                        putExtra("username", username)
-                    }
+
+                    val intent = Intent(this@LoginActivity, WelcomeActivity::class.java)
+                    intent.putExtra("username", username)
+                    intent.putExtra("role", role)
                     startActivity(intent)
+                    finish()
                 } else {
                     Toast.makeText(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            override fun onFailure(call: Call<ResponseMessage>, t: Throwable) {
+            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 Toast.makeText(this@LoginActivity, t.message, Toast.LENGTH_SHORT).show()
             }
         })

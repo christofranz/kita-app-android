@@ -18,6 +18,8 @@ class WelcomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var binding: ActivityWelcomeBinding
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var headerBinding: NavHeaderBinding
+    private lateinit var username: String
+    private lateinit var role: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,15 +28,28 @@ class WelcomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         binding.navView.setNavigationItemSelectedListener(this)
 
-        // Get the username from the Intent
-        val username = intent.getStringExtra("username") ?: "username"
+        // Get the username and role from the Intent
+        username = intent.getStringExtra("username") ?: "username"
+        role = intent.getStringExtra("role") ?: "role"
 
         // Initialize header binding
         val headerView = binding.navView.getHeaderView(0)
         headerBinding = NavHeaderBinding.bind(headerView)
 
         // Set the username in the navigation header
-        headerBinding.navHeaderSubtitle.text = "$username"
+        headerBinding.navHeaderSubtitle.text = username
+
+        // Set navigation items based on role
+        val menu = binding.navView.menu
+        when (role) {
+            "admin" -> {
+                menu.findItem(R.id.nav_set_role).isVisible = true
+            }
+            "teacher" -> {
+                // You can define more roles and visibility logic here
+            }
+            // For parent and default roles, no additional items are shown
+        }
 
         val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -78,6 +93,16 @@ class WelcomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 startActivity(intent)
                 finish()
                 Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show()
+            }
+            R.id.nav_set_role -> {
+                // Admin sets user roles
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.nav_host_fragment, RoleFragment().apply {
+                        arguments = Bundle().apply {
+                            putString("username", username) // Pass the username to the fragment
+                        }
+                    })
+                    .commit()
             }
         }
         drawerLayout.closeDrawers()

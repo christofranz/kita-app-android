@@ -13,6 +13,10 @@
             android:id="@+id/nav_third_layout"
             android:icon="@drawable/baseline_comment_24"
             android:title="Third Layout" />
+        <item
+            android:id="@+id/nav_set_role"
+            android:title="Set Roles"
+            android:visible="false" />
     </group>
     <item android:title="Other">
         <menu>
