@@ -16,6 +16,7 @@ class RoleFragment : Fragment() {
     private var _binding: FragmentRolesBinding? = null
     private val binding get() = _binding!!
     private lateinit var username: String
+    private lateinit var apiService: Api
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,15 +29,16 @@ class RoleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Retrieve the username from the arguments
-        username = arguments?.getString("username") ?: "username"
-
         binding.setRoleButton.setOnClickListener {
             val targetUsername = binding.usernameRoleEditText.text.toString()
             val newRole = binding.newRoleEditText.text.toString()
 
-            val request = SetRoleRequest(username, targetUsername, newRole)
-            RetrofitClient.instance.setRole(request).enqueue(object : Callback<ResponseMessage> {
+            val request = SetRoleRequest(targetUsername, newRole)
+
+            context?.let {
+                apiService = RetrofitClient.getInstance(it).create(Api::class.java)
+            }
+            apiService.setRole(request).enqueue(object : Callback<ResponseMessage> {
                 override fun onResponse(call: Call<ResponseMessage>, response: Response<ResponseMessage>) {
                     if (response.isSuccessful) {
                         Toast.makeText(context, response.body()?.message, Toast.LENGTH_SHORT).show()

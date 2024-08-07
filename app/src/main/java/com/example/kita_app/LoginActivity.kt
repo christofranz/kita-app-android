@@ -32,21 +32,27 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loginUser(username: String, password: String) {
         val user = User(username, password)
+        val apiService = RetrofitClient.getInstance(this).create(Api::class.java)
 
-        RetrofitClient.instance.login(user).enqueue(object : Callback<LoginResponse> {
+        apiService.login(user).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful) {
-                    val message = response.body()?.message
-                    val role = response.body()?.role
-                    Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
-
-                    val intent = Intent(this@LoginActivity, WelcomeActivity::class.java)
-                    intent.putExtra("username", username)
-                    intent.putExtra("role", role)
-                    startActivity(intent)
-                    finish()
+                    val loginResponse = response.body()
+                    if (loginResponse != null) {
+                        Toast.makeText(this@LoginActivity, loginResponse.message, Toast.LENGTH_SHORT).show()
+                        RetrofitClient.setToken(loginResponse.token)
+                        val role = loginResponse.role
+                        val intent = Intent(this@LoginActivity, WelcomeActivity::class.java).apply {
+                            putExtra("username", username)
+                            putExtra("role", role)
+                        }
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    Toast.makeText(this@LoginActivity, "Login failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, "Invalid credentials", Toast.LENGTH_SHORT).show()
                 }
             }
 

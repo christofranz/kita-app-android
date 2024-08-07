@@ -27,8 +27,8 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun registerUser(username: String, password: String) {
         val user = User(username, password)
-
-        RetrofitClient.instance.register(user).enqueue(object : Callback<ResponseMessage> {
+        val apiService = RetrofitClient.getInstance(this).create(Api::class.java)
+        apiService.register(user).enqueue(object : Callback<ResponseMessage> {
             override fun onResponse(call: Call<ResponseMessage>, response: Response<ResponseMessage>) {
                 if (response.isSuccessful) {
                     val message = response.body()?.message

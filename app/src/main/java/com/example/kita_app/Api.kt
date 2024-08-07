@@ -2,9 +2,9 @@ package com.example.kita_app
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
+import retrofit2.http.GET
 
-data class SetRoleRequest(val admin_username: String, val target_username: String, val new_role: String)
-
+data class SetRoleRequest(val target_username: String, val new_role: String)
 
 interface Api {
     @POST("register")
@@ -15,4 +15,7 @@ interface Api {
 
     @POST("set_role")
     fun setRole(@Body request: SetRoleRequest): Call<ResponseMessage>
+
+    @GET("/protected")
+    fun getProtected(): Call<ResponseMessage>
 }
