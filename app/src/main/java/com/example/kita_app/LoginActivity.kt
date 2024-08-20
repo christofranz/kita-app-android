@@ -12,6 +12,8 @@ import retrofit2.Response
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var sessionManager: SessionManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +30,7 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
+        sessionManager = SessionManager(this)
     }
 
     private fun loginUser(username: String, password: String) {
@@ -41,6 +44,8 @@ class LoginActivity : AppCompatActivity() {
                     if (loginResponse != null) {
                         Toast.makeText(this@LoginActivity, loginResponse.message, Toast.LENGTH_SHORT).show()
                         RetrofitClient.setToken(loginResponse.token)
+                        sessionManager.saveToken(loginResponse.token)
+
                         val role = loginResponse.role
                         val intent = Intent(this@LoginActivity, WelcomeActivity::class.java).apply {
                             putExtra("username", username)

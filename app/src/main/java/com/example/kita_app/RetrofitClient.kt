@@ -16,7 +16,7 @@ import javax.net.ssl.X509TrustManager
 
 object RetrofitClient {
 
-    private const val BASE_URL = "https://10.0.2.2:5000/" // Android emulator's localhost
+    private const val BASE_URL = "https://127.0.0.1:5000" // Android emulator's localhost: https://10.0.2.2:5000/
 
     private var token: String? = null
 
