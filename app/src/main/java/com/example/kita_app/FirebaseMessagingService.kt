@@ -10,10 +10,13 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.RemoteMessage
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
-
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
@@ -33,15 +36,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
+        super.onNewToken(token)
         Log.d(TAG, "Refreshed token: $token")
-        // If you want to send messages to this application instance or
-        // manage this app's subscriptions on the server side, send the
-        // instance ID token to your app server.
-        sendRegistrationToServer(token)
-    }
-
-    private fun sendRegistrationToServer(token: String?) {
-        // Implement this method to send the token to your app server.
+        BackendApi.sendFcmTokenToServer(applicationContext, token)  // Pass the context
     }
 
     private fun sendNotification(messageBody: String) {
@@ -74,5 +71,18 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     companion object {
         private const val TAG = "MyFirebaseMsgService"
+
+        fun requestToken(context: Context) {
+            // Request the FCM token
+            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val token = task.result
+                    Log.d(TAG, "FCM Token: $token")
+                    BackendApi.sendFcmTokenToServer(context, token)  // Pass the context
+                } else {
+                    Log.w(TAG, "Fetching FCM token failed", task.exception)
+                }
+            }
+        }
     }
 }

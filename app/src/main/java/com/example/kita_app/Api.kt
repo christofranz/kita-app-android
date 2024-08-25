@@ -5,6 +5,7 @@ import retrofit2.http.POST
 import retrofit2.http.GET
 
 data class SetRoleRequest(val target_username: String, val new_role: String)
+data class FcmTokenRequest(val fcm_token: String)
 
 interface Api {
     @POST("register")
@@ -18,4 +19,7 @@ interface Api {
 
     @GET("/protected")
     fun getProtected(): Call<ResponseMessage>
+
+    @POST("/register_fcm_token")
+    fun sendFcmToken(@Body request: FcmTokenRequest): Call<Void>
 }

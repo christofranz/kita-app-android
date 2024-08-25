@@ -51,6 +51,8 @@ class LoginActivity : AppCompatActivity() {
                             putExtra("username", username)
                             putExtra("role", role)
                         }
+                        // share FCM token with backend
+                        MyFirebaseMessagingService.requestToken(this@LoginActivity)
                         startActivity(intent)
                         finish()
                     } else {

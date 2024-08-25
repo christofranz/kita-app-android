@@ -20,8 +20,13 @@ class WelcomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     private lateinit var headerBinding: NavHeaderBinding
     private lateinit var username: String
     private lateinit var role: String
+    private lateinit var sessionManager: SessionManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        sessionManager = SessionManager(this)
+
         super.onCreate(savedInstanceState)
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -88,6 +93,7 @@ class WelcomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                     .commit()
             }
             R.id.nav_logout -> {
+                sessionManager.logoutUser()
                 // Handle the logout
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
