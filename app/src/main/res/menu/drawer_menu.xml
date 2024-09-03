@@ -17,6 +17,9 @@
             android:id="@+id/nav_set_role"
             android:title="Set Roles"
             android:visible="false" />
+        <item
+            android:id="@+id/nav_events"
+            android:title="View Events" />
     </group>
     <item android:title="Other">
         <menu>

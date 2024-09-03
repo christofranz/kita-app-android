@@ -110,6 +110,12 @@ class WelcomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                     })
                     .commit()
             }
+            R.id.nav_events -> {
+                // Handle the third layout navigation
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.nav_host_fragment, EventListFragment())
+                    .commit()
+            }
         }
         drawerLayout.closeDrawers()
         return true
