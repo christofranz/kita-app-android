@@ -17,7 +17,7 @@ data class Event(
 )
 data class ChildEvents(
     val child_name: String,
-    val group_name: String,
+    val classroom: String,
     val events: List<Event>
 )
 data class Feedback(

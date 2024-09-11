@@ -43,8 +43,7 @@ class EventListFragment : Fragment() {
                 override fun onResponse(call: Call<List<ChildEvents>>, response: Response<List<ChildEvents>>) {
                     if (response.isSuccessful) {
                         val events = response.body() ?: emptyList()
-                        val flatEventList = events.flatMap { it.events } ?: listOf()
-                        eventAdapter = EventAdapter(flatEventList) { event ->
+                        eventAdapter = EventAdapter(events) { event ->
                             openEventDetail(event)
                         }
                         binding.eventRecyclerView.adapter = eventAdapter
