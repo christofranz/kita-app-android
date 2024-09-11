@@ -47,10 +47,16 @@ class LoginActivity : AppCompatActivity() {
                         sessionManager.saveToken(loginResponse.token)
 
                         val role = loginResponse.role
+                        // TODO: consistens useage intent vs. shared preferences
                         val intent = Intent(this@LoginActivity, WelcomeActivity::class.java).apply {
                             putExtra("username", username)
                             putExtra("role", role)
                         }
+                        // Save the user id in EncryptedSharedPreferences
+                        val sharedPreferences = getEncryptedSharedPreferences(this@LoginActivity)
+                        val editor = sharedPreferences.edit()
+                        editor.putString("id", loginResponse.id)
+                        editor.apply()
                         // share FCM token with backend
                         MyFirebaseMessagingService.requestToken(this@LoginActivity)
                         startActivity(intent)

@@ -39,18 +39,19 @@ class EventListFragment : Fragment() {
             apiService = RetrofitClient.getInstance(it).create(Api::class.java)
         }
 
-        apiService.getUpcomingEvents("A").enqueue(object : Callback<List<Event>> {
-                override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
+        apiService.getUpcomingEvents().enqueue(object : Callback<List<ChildEvents>> {
+                override fun onResponse(call: Call<List<ChildEvents>>, response: Response<List<ChildEvents>>) {
                     if (response.isSuccessful) {
                         val events = response.body() ?: emptyList()
-                        eventAdapter = EventAdapter(events) { event ->
+                        val flatEventList = events.flatMap { it.events } ?: listOf()
+                        eventAdapter = EventAdapter(flatEventList) { event ->
                             openEventDetail(event)
                         }
                         binding.eventRecyclerView.adapter = eventAdapter
                     }
                 }
 
-                override fun onFailure(call: Call<List<Event>>, t: Throwable) {
+                override fun onFailure(call: Call<List<ChildEvents>>, t: Throwable) {
                     // Handle error
                 }
         })

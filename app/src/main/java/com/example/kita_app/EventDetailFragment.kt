@@ -38,7 +38,8 @@ class EventDetailFragment : Fragment() {
     }
 
     private fun postFeedback() {
-        // TODO: retrive ids and make sure parent-child fits
+        val sharedPreferences = getEncryptedSharedPreferences(requireContext())
+        val id = sharedPreferences.getString("id", null)
         val feedback = Feedback(child_id = "66cb30233d6250639c4f7815")
         context?.let {
             apiService = RetrofitClient.getInstance(it).create(Api::class.java)

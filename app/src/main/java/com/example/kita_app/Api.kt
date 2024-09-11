@@ -15,6 +15,11 @@ data class Event(
     val max_children_allowed: Int,
     val children_staying_home: List<String>
 )
+data class ChildEvents(
+    val child_name: String,
+    val group_name: String,
+    val events: List<Event>
+)
 data class Feedback(
     val child_id: String
 )
@@ -36,8 +41,8 @@ interface Api {
     @POST("/register_fcm_token")
     fun sendFcmToken(@Body request: FcmTokenRequest): Call<Void>
 
-    @GET("/classrooms/{classroom_name}/events")
-    fun getUpcomingEvents(@Path("classroom_name") classroomName: String): Call<List<Event>>
+    @GET("/events")
+    fun getUpcomingEvents(): Call<List<ChildEvents>>
 
     @POST("/events/{event_id}/feedback")
     fun postEventFeedback(@Path("event_id") eventId: String, @Body feedback: Feedback): Call<ResponseMessage>
