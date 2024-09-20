@@ -61,9 +61,6 @@ class EventListFragment : Fragment() {
 
     private fun openEventDetail(event: Event, childId: String) {
         val fragment = EventDetailFragment.newInstance(event, childId)
-        Log.i("", "child id in list:")
-        Log.i("", childId)
-        Log.i("", "event in opendetail $event")
         parentFragmentManager.beginTransaction()
             .replace(R.id.nav_host_fragment, fragment)
             .addToBackStack(null)

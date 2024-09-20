@@ -75,7 +75,6 @@ class EventDetailFragment : Fragment() {
         context?.let {
             apiService = RetrofitClient.getInstance(it).create(Api::class.java)
         }
-        Log.i("", "child id: $childId")
         apiService.getFeedback(event._id, childId).enqueue(object : Callback<FeedbackResponse> {
             override fun onResponse(call: Call<FeedbackResponse>, response: Response<FeedbackResponse>) {
                 if (response.isSuccessful) {

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class EventAdapter(
     private val childEventsList: List<ChildEvents>,
-    private val onEventClick: (Event) -> Unit) :
+    private val onEventClick: (Event, String) -> Unit) :
 RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_CHILD_HEADER = 0
@@ -42,12 +42,18 @@ RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ChildHeaderViewHolder) {
             val child = getChildForPosition(position)
-            holder.bind(child)
+            child?.let { holder.bind(it) }
         } else if (holder is EventViewHolder) {
+            val child = getChildForPosition(position)
             val event = getEventForPosition(position)
-            event?.let {
-                holder.bind(it)  // Only bind if event is not null
-                holder.itemView.setOnClickListener { onEventClick(event) }
+
+            if (event != null && child != null) {
+                holder.bind(event)
+
+                // Pass both the event and childId to the click listener
+                holder.itemView.setOnClickListener {
+                    onEventClick(event, child.child_id) // Ensure the childId is passed here
+                }
             }
         }
     }
@@ -60,23 +66,25 @@ RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return count
     }
 
+    // Get the ChildEvents object for a given position
     private fun getChildForPosition(position: Int): ChildEvents? {
-        var currentPos = 0
-        childEventsList.forEach { childEvents ->
-            if (currentPos == position) return childEvents
-            currentPos += childEvents.events.size + 1
+        var pos = position
+        for (childEvent in childEventsList) {
+            if (pos == 0) return childEvent
+            if (pos <= childEvent.events.size) return childEvent
+            pos -= (childEvent.events.size + 1)
         }
         return null
     }
 
+    // Get the Event for a given position
     private fun getEventForPosition(position: Int): Event? {
-        var currentPos = 0
-        childEventsList.forEach { childEvents ->
-            currentPos += 1  // Skip the child header
-            if (position < currentPos + childEvents.events.size) {
-                return childEvents.events[position - currentPos]
-            }
-            currentPos += childEvents.events.size
+        var pos = position
+        for (childEvent in childEventsList) {
+            if (pos == 0) return null // Skip header
+            pos--
+            if (pos < childEvent.events.size) return childEvent.events[pos]
+            pos -= childEvent.events.size
         }
         return null
     }
