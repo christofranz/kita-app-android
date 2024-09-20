@@ -16,5 +16,22 @@
         android:id="@+id/stayHomeButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="visible"
         android:text="Stay Home" />
+    <TextView
+        android:id="@+id/textViewFeedbackStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Feedback Status"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp" />
+
+    <!-- Withdraw Feedback Button -->
+    <Button
+        android:id="@+id/buttonWithdrawFeedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Withdraw Feedback"
+        android:visibility="gone"
+        android:layout_marginTop="8dp" />
 </LinearLayout>

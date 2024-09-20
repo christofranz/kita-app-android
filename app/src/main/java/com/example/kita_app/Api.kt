@@ -16,12 +16,17 @@ data class Event(
     val children_staying_home: List<String>
 )
 data class ChildEvents(
+    val child_id: String,
     val child_name: String,
     val classroom: String,
     val events: List<Event>
 )
 data class Feedback(
     val child_id: String
+)
+
+data class FeedbackResponse(
+    val staying_home: Boolean
 )
 
 
@@ -47,5 +52,9 @@ interface Api {
     @POST("/events/{event_id}/feedback")
     fun postEventFeedback(@Path("event_id") eventId: String, @Body feedback: Feedback): Call<ResponseMessage>
 
+    @GET("/events/{event_id}/feedback/{child_id}")
+    fun getFeedback(@Path("event_id") eventId: String, @Path("child_id") child_id: String): Call<FeedbackResponse>
 
+    @POST("/events/{event_id}/feedback/{child_id}/withdraw")
+    fun withdrawFeedback(@Path("event_id") eventId: String, @Path("child_id") child_id: String): Call<FeedbackResponse>
 }

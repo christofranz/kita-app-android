@@ -10,6 +10,8 @@ import com.example.kita_app.databinding.FragmentEventDetailBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.util.Log
+
 
 class EventDetailFragment : Fragment() {
 
@@ -17,6 +19,8 @@ class EventDetailFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var event: Event
+    private lateinit var childId: String
+    private var isChildStayingHome: Boolean = false
     private lateinit var apiService: Api
 
     override fun onCreateView(
@@ -33,14 +37,20 @@ class EventDetailFragment : Fragment() {
         binding.stayHomeButton.setOnClickListener {
             postFeedback()
         }
+        // Get feedback on whether the child is staying home
+        checkIfChildStayingHome()
+
+        // Set up the withdraw button
+        binding.buttonWithdrawFeedback.setOnClickListener {
+            withdrawFeedback()
+        }
 
         return view
     }
 
     private fun postFeedback() {
-        val sharedPreferences = getEncryptedSharedPreferences(requireContext())
-        val id = sharedPreferences.getString("id", null)
-        val feedback = Feedback(child_id = "66cb30233d6250639c4f7815")
+
+        val feedback = Feedback(child_id = childId)
         context?.let {
             apiService = RetrofitClient.getInstance(it).create(Api::class.java)
         }
@@ -61,10 +71,65 @@ class EventDetailFragment : Fragment() {
             })
     }
 
+    private fun checkIfChildStayingHome() {
+        context?.let {
+            apiService = RetrofitClient.getInstance(it).create(Api::class.java)
+        }
+        Log.i("", "child id: $childId")
+        apiService.getFeedback(event._id, childId).enqueue(object : Callback<FeedbackResponse> {
+            override fun onResponse(call: Call<FeedbackResponse>, response: Response<FeedbackResponse>) {
+                if (response.isSuccessful) {
+                    isChildStayingHome = response.body()?.staying_home ?: false
+                    updateFeedbackStatus()
+                } else {
+                    Toast.makeText(requireContext(), "Failed to check feedback status", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<FeedbackResponse>, t: Throwable) {
+                // Handle failure
+            }
+        })
+    }
+
+    private fun updateFeedbackStatus() {
+        if (isChildStayingHome) {
+            binding.textViewFeedbackStatus.text = "Your child is staying home for this event."
+            binding.buttonWithdrawFeedback.visibility = View.VISIBLE
+            binding.stayHomeButton.visibility = View.GONE
+        } else {
+            binding.textViewFeedbackStatus.text = "Your child is attending this event."
+            binding.buttonWithdrawFeedback.visibility = View.GONE
+            binding.stayHomeButton.visibility = View.VISIBLE
+        }
+    }
+
+    private fun withdrawFeedback() {
+        context?.let {
+            apiService = RetrofitClient.getInstance(it).create(Api::class.java)
+        }
+        apiService.withdrawFeedback(event._id, childId).enqueue(object : Callback<FeedbackResponse> {
+            override fun onResponse(call: Call<FeedbackResponse>, response: Response<FeedbackResponse>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), "Feedback withdrawn!", Toast.LENGTH_SHORT).show()
+                    isChildStayingHome = false
+                    updateFeedbackStatus()
+                } else {
+                    Toast.makeText(requireContext(), "Failed to withdraw feedback", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<FeedbackResponse>, t: Throwable) {
+                // Handle failure
+            }
+        })
+    }
+
     companion object {
-        fun newInstance(event: Event): EventDetailFragment {
+        fun newInstance(event: Event, childId: String): EventDetailFragment {
             val fragment = EventDetailFragment()
             fragment.event = event
+            fragment.childId = childId
             return fragment
         }
     }

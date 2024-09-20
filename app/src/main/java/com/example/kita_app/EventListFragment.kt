@@ -1,6 +1,7 @@
 package com.example.kita_app
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,8 @@ import com.example.kita_app.databinding.FragmentEventListBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
+
 
 class EventListFragment : Fragment() {
 
@@ -43,8 +46,8 @@ class EventListFragment : Fragment() {
                 override fun onResponse(call: Call<List<ChildEvents>>, response: Response<List<ChildEvents>>) {
                     if (response.isSuccessful) {
                         val events = response.body() ?: emptyList()
-                        eventAdapter = EventAdapter(events) { event ->
-                            openEventDetail(event)
+                        eventAdapter = EventAdapter(events) { event, childId ->
+                            openEventDetail(event, childId)
                         }
                         binding.eventRecyclerView.adapter = eventAdapter
                     }
@@ -56,8 +59,11 @@ class EventListFragment : Fragment() {
         })
     }
 
-    private fun openEventDetail(event: Event) {
-        val fragment = EventDetailFragment.newInstance(event)
+    private fun openEventDetail(event: Event, childId: String) {
+        val fragment = EventDetailFragment.newInstance(event, childId)
+        Log.i("", "child id in list:")
+        Log.i("", childId)
+        Log.i("", "event in opendetail $event")
         parentFragmentManager.beginTransaction()
             .replace(R.id.nav_host_fragment, fragment)
             .addToBackStack(null)
