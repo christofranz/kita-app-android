@@ -46,8 +46,8 @@ interface Api {
     @POST("/register_fcm_token")
     fun sendFcmToken(@Body request: FcmTokenRequest): Call<Void>
 
-    @GET("/events")
-    fun getUpcomingEvents(): Call<List<ChildEvents>>
+    @GET("/user/{user_id}/events")
+    fun getUpcomingEvents(@Path("user_id") user_id: String): Call<List<ChildEvents>>
 
     @POST("/events/{event_id}/feedback")
     fun postEventFeedback(@Path("event_id") eventId: String, @Body feedback: Feedback): Call<ResponseMessage>

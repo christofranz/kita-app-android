@@ -55,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
                         // Save the user id in EncryptedSharedPreferences
                         val sharedPreferences = getEncryptedSharedPreferences(this@LoginActivity)
                         val editor = sharedPreferences.edit()
-                        editor.putString("id", loginResponse.id)
+                        editor.putString("user_id", loginResponse.id)
                         editor.apply()
                         // share FCM token with backend
                         MyFirebaseMessagingService.requestToken(this@LoginActivity)

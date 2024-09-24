@@ -1,7 +1,6 @@
 package com.example.kita_app
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,8 +40,11 @@ class EventListFragment : Fragment() {
         context?.let {
             apiService = RetrofitClient.getInstance(it).create(Api::class.java)
         }
-
-        apiService.getUpcomingEvents().enqueue(object : Callback<List<ChildEvents>> {
+        // get user_id
+        val sharedPreferences = getEncryptedSharedPreferences(requireContext())
+        val user_id = sharedPreferences.getString("user_id", null)
+        if (user_id != null) {
+            apiService.getUpcomingEvents(user_id).enqueue(object : Callback<List<ChildEvents>> {
                 override fun onResponse(call: Call<List<ChildEvents>>, response: Response<List<ChildEvents>>) {
                     if (response.isSuccessful) {
                         val events = response.body() ?: emptyList()
@@ -56,7 +58,11 @@ class EventListFragment : Fragment() {
                 override fun onFailure(call: Call<List<ChildEvents>>, t: Throwable) {
                     // Handle error
                 }
-        })
+            })
+        } else {
+            Toast.makeText(requireContext(), "Missing user_id for retrieving events.", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     private fun openEventDetail(event: Event, childId: String) {
