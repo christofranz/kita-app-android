@@ -32,10 +32,10 @@ data class FeedbackResponse(
 
 interface Api {
     @POST("register")
-    fun register(@Body user: User): Call<ResponseMessage>
+    fun register(@Body user: RegisterUser): Call<ResponseMessage>
 
     @POST("login")
-    fun login(@Body user: User): Call<LoginResponse>
+    fun login(@Body firebase_id_token: String): Call<LoginResponse>
 
     @POST("set_role")
     fun setRole(@Body request: SetRoleRequest): Call<ResponseMessage>

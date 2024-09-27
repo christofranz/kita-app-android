@@ -63,6 +63,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-messaging-ktx")
+    implementation("com.google.firebase:firebase-auth:23.0.0")
 
     //androidx security for encrypted shared preferences
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
