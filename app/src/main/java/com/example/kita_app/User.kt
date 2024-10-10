@@ -15,8 +15,18 @@ data class RegisterUser(
     val role: String
 )
 
+
+data class LoginRequest(
+    val firebase_id_token: String
+)
+
+
 data class LoginResponse(
     val token: String,
     val message: String,
     val user: User
+)
+
+data class PasswordResetRequest(
+    val email: String
 )

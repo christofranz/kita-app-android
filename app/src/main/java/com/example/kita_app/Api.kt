@@ -35,7 +35,10 @@ interface Api {
     fun register(@Body user: RegisterUser): Call<ResponseMessage>
 
     @POST("login")
-    fun login(@Body firebase_id_token: String): Call<LoginResponse>
+    fun login(@Body login: LoginRequest): Call<LoginResponse>
+
+    @POST("reset_password")
+    fun resetPassword(@Body email: PasswordResetRequest): Call<ResponseMessage>
 
     @POST("set_role")
     fun setRole(@Body request: SetRoleRequest): Call<ResponseMessage>

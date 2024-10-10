@@ -36,6 +36,11 @@
             android:name=".RegisterActivity"
             android:exported="false" />
 
+        <!-- Reset Password Activity -->
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:exported="false" />
+
         <!-- Welcome Activity -->
         <activity
             android:name=".WelcomeActivity"

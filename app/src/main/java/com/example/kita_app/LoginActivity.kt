@@ -36,6 +36,12 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
+
+        binding.resetPasswordButton.setOnClickListener {
+            val intent = Intent(this, ResetPasswordActivity::class.java)
+            startActivity(intent)
+        }
+
         sessionManager = SessionManager(this)
     }
 
@@ -48,9 +54,11 @@ class LoginActivity : AppCompatActivity() {
                         user.getIdToken(true).addOnCompleteListener { tokenTask ->
                             if (tokenTask.isSuccessful) {
                                 val firebaseIdToken = tokenTask.result?.token
+
                                 if (firebaseIdToken != null) {
                                     val apiService = RetrofitClient.getInstance(this).create(Api::class.java)
-                                    apiService.login(firebaseIdToken).enqueue(object : Callback<LoginResponse> {
+                                    val login = LoginRequest(firebaseIdToken)
+                                    apiService.login(login).enqueue(object : Callback<LoginResponse> {
                                         override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                                             if (response.isSuccessful) {
                                                 val loginResponse = response.body()
